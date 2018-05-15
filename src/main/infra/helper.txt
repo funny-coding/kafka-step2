@@ -1,0 +1,3 @@
+send a message to a topic X : docker-compose exec kafka bash -c "echo story | kafka-console-producer --broker-list localhost:9092 --topic X"
+retrieve a message from a topic X : docker-compose exec kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic X --from-beginning --max-messages=1
+see all my topic : docker-compose exec kafka kafka-topics  --zookeeper zookeeper:2181 --list
