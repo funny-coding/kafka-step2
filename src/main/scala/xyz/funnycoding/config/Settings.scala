@@ -11,5 +11,9 @@ object Settings {
   val keySerializer: String = config.getString("conf.key.serializer")
   val valueSerializer: String = config.getString("conf.value.serializer")
   val consumerGroupId: String = config.getString("conf.group.id")
-  val topicName: String = config.getString("conf.topic.name")
+  val topicInputName: String = config.getString("conf.topic.input.name")
+  val topicErrorName: String = config.getString("conf.topic.output.error")
+  val topicWarnName: String = config.getString("conf.topic.output.warn")
+  val topicInfoName: String = config.getString("conf.topic.output.info")
+  val topicOtherName: String = config.getString("conf.topic.output.other")
 }
