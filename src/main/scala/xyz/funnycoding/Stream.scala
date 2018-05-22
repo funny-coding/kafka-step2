@@ -1,13 +1,12 @@
 package xyz.funnycoding
 
-import java.lang
 import java.util.Properties
+import java.util.regex.Pattern
 
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.kstream._
 import org.apache.kafka.streams.{KafkaStreams, KeyValue, StreamsBuilder, StreamsConfig}
 import xyz.funnycoding.config.Settings._
-import java.util.regex.Pattern
 
 object Stream extends App {
 
@@ -66,10 +65,8 @@ object Stream extends App {
         }
       }
     }).toStream.map[String, Int]{
-      new KeyValueMapper[String, Map[String, Int], KeyValue[String, Int]] {
-        override def apply(key: String, value: Map[String, Int]): KeyValue[String, Int] = {
-          new KeyValue(key, value.values.head)
-        }
+      (key: String, value: Map[String, Int]) => {
+        new KeyValue(key, value.values.head)
       }
     }
   }
