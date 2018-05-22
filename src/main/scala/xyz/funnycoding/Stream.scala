@@ -35,29 +35,23 @@ object Stream extends App {
     }
   }
   def createFilteredKStream(records: KStream[String, (String, String, String)], level: String): KStream[String, (String, String, String)] = {
-    records.filter(new Predicate[String, (String, String, String)] {
-      override def test(key: String, value: (String, String, String)): Boolean = value._2 == level
-    })
+    records.filter((key: String, value: (String, String, String)) => value._2 == level)
   }
 
   def createMappedKStream(records: KStream[String, (String, String, String)]): KStream[String, String] = {
     records.map[String, String] {
-      new KeyValueMapper[String, (String, String, String), KeyValue[String, String]] {
-        override def apply(key: String, value: (String, String, String)): KeyValue[String, String] = {
-          new KeyValue(value._1, value._2)
-        }
+      (key: String, value: (String, String, String)) => {
+        new KeyValue(value._1, value._2)
       }
     }
   }
 
   def createGroupedKStream(records: KStream[String, String]): KGroupedStream[String, String] = {
-    records.groupBy(new KeyValueMapper[String,String,String] {
-      override def apply(key: String, value: String):  String = key
-    })
+    records.groupBy((key: String, value: String) => key)
   }
 
   def countByDate(groupedStream: KGroupedStream[String, String]): KStream[String,  Int] = {
-    groupedStream.aggregate(new Initializer[Map[String, Int]] {override def apply(): Map[String, Int] = Map()}, new Aggregator[String, String,Map[String, Int]] {
+    groupedStream.aggregate(() => Map(), new Aggregator[String, String,Map[String, Int]] {
       override def apply(aggKey: String, value: String,
                          aggregate: Map[String, Int]): Map[String, Int] = {
         aggregate.keys.toList.contains(aggKey) match {
