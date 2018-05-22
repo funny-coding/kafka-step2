@@ -11,11 +11,11 @@ object Producer extends App {
   props.put("key.serializer", keySerializer)
   props.put("value.serializer", valueSerializer)
   val producer = new KafkaProducer[String, String](props)
-  var i:Int = 0
-  while(i<10000){
-    i += 1
-    val record = new ProducerRecord[String, String](topicInputName,"line-"+i , new Log().generate)
+
+  (0 to 10000).map( i => {
+    val record = new ProducerRecord[String, String](topicInputName, "line-" + i, new Log().generate)
     producer.send(record)
   }
+  )
   producer.close()
 }
